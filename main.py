@@ -36,7 +36,7 @@ def output(comp: str):
     comp_name=yf.Ticker(symbol)
     company_name = comp_name.info['longName']
     company_description = comp_name.info.get("longBusinessSummary", "Description not found")
-    logo_url = comp_name.info.get("logo_url", "Logo URL not found")
+    logo_url = comp_name.info.get("logo_url", "No logo available")
 
     refresh=data["Meta Data"]["3. Last Refreshed"]
     interval=data["Meta Data"]["4. Interval"]
