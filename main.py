@@ -29,14 +29,14 @@ def root():
 
 @app.get("/company")
 def output(comp: str):
- 
     # Reading from json file
+    overview = json.load(open('overview.json', 'r'))
     data = json.load(open('sample.json', 'r'))
+    news = json.load(open('news.json', 'r'))
     symbol=data["Meta Data"]['2. Symbol']
-    comp_name=yf.Ticker(symbol)
-    company_name = comp_name.info['longName']
-    company_description = comp_name.info.get("longBusinessSummary", "Description not found")
-    logo_url = comp_name.info.get("logo_url", "No logo available")
+    company_name = overview['Name']
+    company_description = overview['Description']
+    logo_url = "No logo available"
 
     refresh=data["Meta Data"]["3. Last Refreshed"]
     interval=data["Meta Data"]["4. Interval"]
@@ -121,7 +121,7 @@ def output(comp: str):
     for i in index_list:
         ind.append(str(i))
 
-    return {
+    final= {
         "openlist":openlist,
         "highlist": high,
         "lowlist": low,
@@ -142,8 +142,10 @@ def output(comp: str):
         "RSI":RSI,
         "final":closing[0],
         "ROC":ROC,
+        
 
 
     }
+    return final | overview
 
 
