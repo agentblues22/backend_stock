@@ -1,10 +1,17 @@
 import requests
 import pandas as pd
-from fastapi import FastAPI
+from fastapi import FastAPI,Response
 import numpy as np
 import json
 from fastapi.middleware.cors import CORSMiddleware
 import yfinance as yf
+import os
+from huggingface_hub import InferenceClient
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.vectorstores import Chroma
+
 
 
 app=FastAPI()
@@ -26,6 +33,60 @@ app.add_middleware(
 @app.get("/")
 def root():
     return {"hello": "world"}
+
+@app.get('/ask')
+def ask(prompt:str):
+    loader = PyPDFLoader("finance_metrics_general_guide.pdf")
+    documents = loader.load()
+    text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=400,
+    chunk_overlap=100
+    )
+    docs = text_splitter.split_documents(documents)
+    embeddings = HuggingFaceEmbeddings(
+    model_name="sentence-transformers/all-MiniLM-L6-v2",
+    model_kwargs={"local_files_only":True}
+    )
+    vectorstore = Chroma.from_documents(docs, embeddings)
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 7})
+    def ask_llm(context, question):
+        prompt = f"""
+        You are a good AI agent. Don't overthink and explain the steps. Answer based ONLY on the context. If the answer isn't in the context, Reply "I don't Know"
+
+        Context:
+        {context}
+
+        Question:
+        {question}
+        """
+
+   
+        url = "http://localhost:11434/api/generate"
+        data = {
+        "model": "phi:latest",
+        "prompt": prompt,
+        "stream": False,
+        "options":{
+        "num_predict":150
+    }
+}
+        response = requests.post(url, json=data)
+
+        return (response.json()["response"])
+    query = prompt
+
+    retrieved_docs = retriever.invoke(query)
+    context = "\n".join([doc.page_content for doc in retrieved_docs])
+
+    answer = ask_llm(context, query)
+    myresponse=str(answer)
+    
+
+
+    respjson={'user':prompt,
+              'AI':myresponse}
+    print(answer)
+    return respjson
 
 @app.get("/company")
 def output(comp: str):
