@@ -3,17 +3,26 @@
 A FastAPI backend powering real-time stock market analysis, featuring multi-source data aggregation, technical indicator calculation, and an AI agent for natural language market queries.
 Features
 
-Multi-source API aggregation (price data, fundamentals, news)
-Technical indicators calculated from raw data — RSI, ROC, Moving Averages
-RAG-based AI agent powered by ChromaDB and HuggingFace
-RESTful API serving processed insights to the frontend
+-Multi-source API aggregation (price data, fundamentals, news)
+
+-Technical indicators calculated from raw data — RSI, ROC, Moving Averages
+
+-RAG-based AI agent powered by ChromaDB and HuggingFace
+
+-RESTful API serving processed insights to the frontend
 
 **Tech Stack**
 
 FastAPI, ChromaDB, HuggingFace, Pandas, NumPy, PyPDF, Uvicorn
-Installation
-bashpip install huggingface chroma fastapi requests pandas numpy pypdf uvicorn
-uvicorn main:app --reload
+
+**Installation**
+
+-bashpip install huggingface chroma fastapi requests pandas numpy pypdf uvicorn
+
+**run**
+
+-uvicorn main:app --reload
+
 **Architecture**
 Two primary routes handle all operations:
 /ask — AI agent endpoint processing natural language queries via a RAG pipeline built with LangChain and  ChromaDB. A PDF document(finance_metrics_general_guide.pdf) serves as the knowledge base, providing contextual information that grounds the AI agent's responses.
