@@ -1,4 +1,5 @@
 **Stock Market Analytics Dashboard — Backend**
+
 A FastAPI backend powering real-time stock market analysis, featuring multi-source data aggregation, technical indicator calculation, and an AI agent for natural language market queries.
 Features
 
@@ -8,6 +9,7 @@ RAG-based AI agent powered by ChromaDB and HuggingFace
 RESTful API serving processed insights to the frontend
 
 **Tech Stack**
+
 FastAPI, ChromaDB, HuggingFace, Pandas, NumPy, PyPDF, Uvicorn
 Installation
 bashpip install huggingface chroma fastapi requests pandas numpy pypdf uvicorn
@@ -31,5 +33,7 @@ Source 2: Fundamental metrics (EPS, EBITDA)
 Source 3: Latest news sentiment
 
 Raw data is transformed into smoothed moving averages, RSI and ROC indicators before being served to the frontend.
+
 **API Configuration**
+
 Demo mode reads from a static CSV. To enable live data follow the instructions in code comments.
