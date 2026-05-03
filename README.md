@@ -24,6 +24,7 @@ FastAPI, ChromaDB, HuggingFace, Pandas, NumPy, PyPDF, Uvicorn
 -uvicorn main:app --reload
 
 **Architecture**
+
 Two primary routes handle all operations:
 /ask — AI agent endpoint processing natural language queries via a RAG pipeline built with LangChain and  ChromaDB. A PDF document(finance_metrics_general_guide.pdf) serves as the knowledge base, providing contextual information that grounds the AI agent's responses.
 /company — Data pipeline endpoint handling multi-source aggregation and transformation
